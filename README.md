@@ -44,7 +44,7 @@ A **comprehensive web application** for managing student academic data, providin
 
 ### ML-Powered Intelligence
 - **Performance Predictions** - AI-powered exam score forecasting
-- **📊 Risk Detection** - Identify at-risk students early
+- **Risk Detection** - Identify at-risk students early
 - **Smart Recommendations** - Personalized improvement suggestions
 - **Trend Analysis** - Advanced analytics and insights
 
@@ -63,8 +63,8 @@ A **comprehensive web application** for managing student academic data, providin
 ###  Modern UI/UX
 - **Glassmorphism Design** - Beautiful, modern interface
 - **Smooth Animations** - Polished user interactions
-- ** Dark Mode Support** - Easy on the eyes (coming soon)
-- ** Fully Responsive** - Perfect on all devices
+- **Dark Mode Support** - Easy on the eyes (coming soon)
+- **Fully Responsive** - Perfect on all devices
 
 ## Tech Stack
 
