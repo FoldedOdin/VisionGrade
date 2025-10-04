@@ -17,7 +17,7 @@
 
 ##  **VisionGrade Demo Video**
 
-[![VisionGrade Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://youtu.be/YOUR_VIDEO_ID)
+[![VisionGrade Demo Video](https://img.youtube.com/vi/uBtksE8_Uq0/maxresdefault.jpg)](https://youtu.be/uBtksE8_Uq0)
 
 *🎥 Click above to watch the full demo on YouTube*
 
