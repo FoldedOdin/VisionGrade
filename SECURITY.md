@@ -133,7 +133,6 @@ Security updates will be:
 ## Contact
 
 For security-related questions or concerns:
-- **Security Team**: security@visiongrade.com
 - **General Issues**: Create a GitHub issue (for non-security matters)
 - **Documentation**: Refer to our security documentation in `/docs/security/`
 
