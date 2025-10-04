@@ -63,7 +63,7 @@ A **comprehensive web application** for managing student academic data, providin
 ###  Modern UI/UX
 - **Glassmorphism Design** - Beautiful, modern interface
 - **Smooth Animations** - Polished user interactions
-- **Dark Mode Support** - Easy on the eyes (coming soon)
+- **Dark Mode Support** - Easy on the eyes
 - **Fully Responsive** - Perfect on all devices
 
 ## Tech Stack
