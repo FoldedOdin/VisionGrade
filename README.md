@@ -15,7 +15,7 @@
 
 <div align="center">
 
-## 🎬 **VisionGrade Demo Video**
+##  **VisionGrade Demo Video**
 
 [![VisionGrade Demo Video](https://img.youtube.com/vi/YOUR_VIDEO_ID/maxresdefault.jpg)](https://youtu.be/YOUR_VIDEO_ID)
 
@@ -24,49 +24,49 @@
 ---
 </div>
 
-## 🌟 About
+##  About
 
 A **comprehensive web application** for managing student academic data, providing ML-powered performance predictions, and facilitating communication between students, faculty, and administrators. Designed for educational institutions seeking intelligent performance analytics.
 
-## ✨ Features
+##  Features
 
-### 👥 Multi-Role System
-- **🎓 Students** - Access grades, attendance, and performance predictions
-- **👨‍🏫 Faculty** - Manage courses, grades, and student assessments
-- **📚 Tutors** - Support student learning and track progress
-- **⚙️ Administrators** - Full system control and analytics
+###  Multi-Role System
+- **Students** - Access grades, attendance, and performance predictions
+- **Faculty** - Manage courses, grades, and student assessments
+- **Tutors** - Support student learning and track progress
+- **Administrators** - Full system control and analytics
 
-### 📊 Performance Tracking
-- **📈 Real-time Monitoring** - Track marks and attendance instantly
-- **📉 Historical Analysis** - View performance trends over time
-- **🎯 Goal Setting** - Set and track academic targets
-- **📱 Mobile Responsive** - Access data anywhere, anytime
+###  Performance Tracking
+- **Real-time Monitoring** - Track marks and attendance instantly
+- **Historical Analysis** - View performance trends over time
+- **Goal Setting** - Set and track academic targets
+- **Mobile Responsive** - Access data anywhere, anytime
 
-### 🤖 ML-Powered Intelligence
-- **🔮 Performance Predictions** - AI-powered exam score forecasting
+### ML-Powered Intelligence
+- **Performance Predictions** - AI-powered exam score forecasting
 - **📊 Risk Detection** - Identify at-risk students early
-- **💡 Smart Recommendations** - Personalized improvement suggestions
-- **📈 Trend Analysis** - Advanced analytics and insights
+- **Smart Recommendations** - Personalized improvement suggestions
+- **Trend Analysis** - Advanced analytics and insights
 
-### 🔔 Automated Notifications
-- **⚠️ Low Attendance Alerts** - Automatic warnings for poor attendance
-- **🚨 Performance Warnings** - Early intervention for struggling students
-- **✉️ Email Integration** - Automated notification delivery
-- **📱 Real-time Updates** - Instant alerts for important events
+### Automated Notifications
+- **Low Attendance Alerts** - Automatic warnings for poor attendance
+- **Performance Warnings** - Early intervention for struggling students
+- **Email Integration** - Automated notification delivery
+- **Real-time Updates** - Instant alerts for important events
 
-### 📄 Report Generation
-- **📋 PDF Reports** - Professional report cards and transcripts
-- **📊 Performance Insights** - Detailed analytics and visualizations
-- **📈 Progress Reports** - Comprehensive academic summaries
-- **🖨️ Batch Processing** - Generate multiple reports efficiently
+### Report Generation
+- **PDF Reports** - Professional report cards and transcripts
+- **Performance Insights** - Detailed analytics and visualizations
+- **Progress Reports** - Comprehensive academic summaries
+- **Batch Processing** - Generate multiple reports efficiently
 
-### 🎨 Modern UI/UX
-- **✨ Glassmorphism Design** - Beautiful, modern interface
-- **🌊 Smooth Animations** - Polished user interactions
-- **🌙 Dark Mode Support** - Easy on the eyes (coming soon)
-- **📱 Fully Responsive** - Perfect on all devices
+###  Modern UI/UX
+- **Glassmorphism Design** - Beautiful, modern interface
+- **Smooth Animations** - Polished user interactions
+- ** Dark Mode Support** - Easy on the eyes (coming soon)
+- ** Fully Responsive** - Perfect on all devices
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 <div align="center">
 
@@ -93,9 +93,9 @@ A **comprehensive web application** for managing student academic data, providin
 
 </div>
 
-## 🚀 Quick Start
+##  Quick Start
 
-### 📋 Prerequisites
+### Prerequisites
 
 Before you begin, ensure you have the following installed:
 
@@ -104,7 +104,7 @@ Before you begin, ensure you have the following installed:
 - ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-v12+-316192?logo=postgresql&logoColor=white) (v12 or higher)
 - ![Redis](https://img.shields.io/badge/Redis-Optional-DC382D?logo=redis&logoColor=white) (optional, for caching)
 
-### ⚡ Installation
+###  Installation
 
 ```bash
 # 1️⃣ Clone the repository
@@ -139,7 +139,7 @@ node scripts/create-default-admin.js
 node scripts/create-first-admin.js
 ```
 
-### 🌐 Start Development Servers
+###  Start Development Servers
 
 ```bash
 # Start all services at once
@@ -151,13 +151,13 @@ npm run dev:backend    # Backend  → http://localhost:5000
 npm run dev:ml        # ML API   → http://localhost:8000
 ```
 
-### 🌐 Access Points
+### Access Points
 
 - **Frontend**: [http://localhost:3000](http://localhost:3000)
 - **Backend API**: [http://localhost:5000](http://localhost:5000)
 - **ML Service**: [http://localhost:8000](http://localhost:8000)
 
-## 🔐 Security Notice
+##  Security Notice
 
 <div align="center">
 
@@ -169,7 +169,7 @@ npm run dev:ml        # ML API   → http://localhost:8000
 
 **⚠️ Important:** Administrator accounts cannot be created through public registration for security reasons.
 
-### 🔑 Admin Setup Options
+###  Admin Setup Options
 
 #### Development/Testing (Quick Setup)
 ```bash
@@ -189,7 +189,7 @@ Follow the interactive prompts to create a secure admin account.
 - [Admin Setup Guide](backend/docs/ADMIN_SETUP.md)
 - [Default Admin Setup](DEFAULT_ADMIN_SETUP.md)
 
-## 📜 Available Scripts
+##  Available Scripts
 
 <div align="center">
 
@@ -205,7 +205,7 @@ Follow the interactive prompts to create a secure admin account.
 
 </div>
 
-## 🏗️ Project Structure
+##  Project Structure
 
 ```
 📦 vision-grade/
@@ -275,7 +275,7 @@ Follow the interactive prompts to create a secure admin account.
 └── 📄 README.md               # You are here
 ```
 
-## 🧪 Testing
+##  Testing
 
 <div align="center">
 
@@ -299,7 +299,7 @@ cd ml-service && pytest
 npm test
 ```
 
-## 🚀 Deployment
+##  Deployment
 
 ### Frontend Deployment
 [![Deploy to Netlify](https://img.shields.io/badge/Deploy%20to-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://netlify.com)
@@ -323,7 +323,7 @@ NODE_ENV=production
 REDIS_URL=your-redis-url (optional)
 ```
 
-## 🌍 Browser Support
+##  Browser Support
 
 <div align="center">
 
@@ -340,9 +340,9 @@ We love contributions! Please read our contributing guidelines before getting st
 
 <div align="center">
 
-[![Contributors](https://img.shields.io/github/contributors/yourusername/visiongrade)](https://github.com/yourusername/visiongrade/graphs/contributors)
-[![Issues](https://img.shields.io/github/issues/yourusername/visiongrade)](https://github.com/yourusername/visiongrade/issues)
-[![Pull Requests](https://img.shields.io/github/issues-pr/yourusername/visiongrade)](https://github.com/yourusername/visiongrade/pulls)
+[![Contributors](https://img.shields.io/github/contributors/FoldedOdin/VisionGrade)](https://github.com/FoldedOdin/VisionGrade/graphs/contributors)
+[![Issues](https://img.shields.io/github/issues/yourusername/visiongrade)](https://github.com/FoldedOdin/VisionGrade/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/FoldedOdin/VisionGrade)](https://github.com/FoldedOdin/VisionGrade/pulls)
 
 </div>
 
@@ -382,9 +382,9 @@ Special thanks to the amazing open source community and these fantastic projects
 
 <div align="center">
 
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?logo=github&logoColor=white)](https://github.com/yourusername)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/yourusername)
-[![Email](https://img.shields.io/badge/Email-Contact-D14836?logo=gmail&logoColor=white)](mailto:your.email@example.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?logo=github&logoColor=white)](https://github.com/FoldedOdin)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin&logoColor=white)](https://linkedin.com/in/karthikkpradeep)
+[![Email](https://img.shields.io/badge/Email-Contact-D14836?logo=gmail&logoColor=white)](mailto:karthikkpradeep123@gmail.com)
 
 </div>
 
