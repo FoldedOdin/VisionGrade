@@ -5,11 +5,11 @@
 **Student Performance Analysis System**
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
-[![Last Commit](https://img.shields.io/github/last-commit/yourusername/visiongrade)](https://github.com/yourusername/visiongrade)
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)](https://github.com/yourusername/visiongrade)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)](https://github.com/yourusername/visiongrade)
-[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/yourusername/visiongrade)
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://github.com/yourusername/visiongrade)
+[![Last Commit](https://img.shields.io/github/last-commit/FoldedOdin/VisionGrade)](https://github.com/FoldedOdin/VisionGrade)
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?logo=python&logoColor=white)](https://github.com/FoldedOdin/VisionGrade)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?logo=javascript&logoColor=black)](https://github.com/FoldedOdin/VisionGrade)
+[![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/FoldedOdin/VisionGrade)
+[![Version](https://img.shields.io/badge/Version-1.0.0-blue.svg)](https://github.com/FoldedOdin/VisionGrade)
 
 </div>
 
