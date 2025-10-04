@@ -1,0 +1,35 @@
+{
+  "model_name": "random_forest",
+  "model_file": "production_random_forest_20251003_000025.joblib",
+  "feature_columns": [
+    "series_test_1_percentage",
+    "series_test_2_percentage",
+    "lab_internal_percentage",
+    "average_internal_percentage",
+    "subject_type_encoded",
+    "semester",
+    "attendance_percentage"
+  ],
+  "metrics": {
+    "mae": 3.9626974762436773,
+    "mse": 25.81197996586949,
+    "rmse": 5.0805491795542626,
+    "r2_score": 0.8555682435694992,
+    "accuracy_within_10_percent": 0.7485,
+    "training_time_seconds": 1.634867,
+    "training_samples": 90000,
+    "test_samples": 10000
+  },
+  "is_best_model": true,
+  "training_timestamp": "20251003_000025",
+  "model_version": "2.0.0",
+  "feature_importance": {
+    "series_test_1_percentage": 0.24060836531232258,
+    "series_test_2_percentage": 0.2195616919924917,
+    "lab_internal_percentage": 0.15258590254930704,
+    "average_internal_percentage": 0.36599560177297924,
+    "subject_type_encoded": 0.006308911448047491,
+    "semester": 0.0035954193231230733,
+    "attendance_percentage": 0.011344107601728904
+  }
+}

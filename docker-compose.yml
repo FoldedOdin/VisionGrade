@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: visiongrade_db
+    environment:
+      POSTGRES_DB: visiongrade_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - visiongrade_network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: visiongrade_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - visiongrade_network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: visiongrade_backend
+    environment:
+      NODE_ENV: development
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: visiongrade_db
+      REDIS_HOST: redis
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - visiongrade_network
+
+  # ML Service
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    container_name: visiongrade_ml
+    environment:
+      FLASK_ENV: development
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/visiongrade_db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./ml-service:/app
+    networks:
+      - visiongrade_network
+
+  # Frontend (for production)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: visiongrade_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - visiongrade_network
+
+volumes:
+  postgres_data:
+
+networks:
+  visiongrade_network:
+    driver: bridge

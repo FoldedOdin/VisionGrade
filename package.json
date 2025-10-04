@@ -1,0 +1,21 @@
+{
+  "name": "vision-grade",
+  "version": "1.0.0",
+  "description": "Student Performance Analysis System (SPAS)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:ml\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:ml": "cd ml-service && python app.py",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../ml-service && pip install -r requirements.txt",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start"
+  },
+  "keywords": ["education", "student", "performance", "analytics", "ml"],
+  "author": "VisionGrade Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

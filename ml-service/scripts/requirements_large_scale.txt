@@ -1,0 +1,11 @@
+# Additional requirements for large-scale synthetic data generation
+pandas>=1.5.0
+numpy>=1.21.0
+scikit-learn>=1.1.0
+xgboost>=1.6.0
+joblib>=1.2.0
+tqdm>=4.64.0
+psutil>=5.9.0
+pyarrow>=10.0.0  # For parquet file support
+fastparquet>=0.8.0  # Alternative parquet engine
+memory-profiler>=0.60.0  # For memory monitoring
