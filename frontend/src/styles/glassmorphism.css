@@ -197,6 +197,25 @@ select option:disabled {
   padding: 8px 12px !important;
 }
 
+/* Admin form input styling to ensure visibility */
+.admin-form-input {
+  background-color: white !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+  opacity: 1 !important;
+}
+
+.admin-form-input::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+.admin-form-input:focus {
+  background-color: white !important;
+  color: #1f2937 !important;
+  -webkit-text-fill-color: #1f2937 !important;
+}
+
 /* Responsive glassmorphism */
 @media (max-width: 768px) {
   .glass-card {

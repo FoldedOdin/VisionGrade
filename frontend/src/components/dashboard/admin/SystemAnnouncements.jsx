@@ -101,7 +101,12 @@ const SystemAnnouncements = () => {
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="Enter announcement title..."
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 bg-white admin-form-input"
+                  style={{ 
+                    color: '#1f2937 !important', 
+                    backgroundColor: '#ffffff !important',
+                    WebkitTextFillColor: '#1f2937'
+                  }}
                   maxLength={255}
                 />
                 <div className="text-right text-xs text-gray-500 mt-1">
@@ -119,7 +124,12 @@ const SystemAnnouncements = () => {
                   onChange={(e) => handleInputChange('message', e.target.value)}
                   placeholder="Enter your announcement message here..."
                   rows={8}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical text-gray-900 placeholder-gray-500 bg-white admin-form-input"
+                  style={{ 
+                    color: '#1f2937 !important', 
+                    backgroundColor: '#ffffff !important',
+                    WebkitTextFillColor: '#1f2937'
+                  }}
                   maxLength={2000}
                 />
                 <div className="text-right text-xs text-gray-500 mt-1">

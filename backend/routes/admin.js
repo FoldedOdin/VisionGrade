@@ -28,10 +28,14 @@ router.delete('/subjects/:id', adminController.deleteSubject);
 // Faculty-Subject assignment routes
 router.get('/faculty-assignments', adminController.getFacultyAssignments);
 router.post('/faculty-assignments', adminController.assignSubjectsToFaculty);
+router.post('/faculty-assignments/auto-assign', adminController.autoAssignFacultyToSubjects);
 router.delete('/faculty-assignments/:facultyId/:subjectId', adminController.removeSubjectAssignment);
 
 // System announcements
 router.post('/announcements', adminController.createSystemAnnouncement);
+
+// Student enrollment management
+router.post('/fix-enrollments', adminController.fixStudentEnrollments);
 
 // Student promotion and graduation
 router.post('/promote-students', adminController.promoteStudents);

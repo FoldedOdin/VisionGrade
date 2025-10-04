@@ -32,10 +32,18 @@ const checkMLServiceHealth = async (req, res) => {
   } catch (error) {
     logger.error('ML service health check failed:', error.message);
     
+    // Get database stats as fallback
+    const dbStats = await MLPrediction.count();
+    
     res.status(503).json({
       success: false,
       error: 'ML service unavailable',
       details: error.message,
+      fallback_info: {
+        database_predictions: dbStats,
+        service_url: ML_SERVICE_URL,
+        status: 'offline'
+      },
       backend_timestamp: new Date().toISOString()
     });
   }
@@ -244,7 +252,7 @@ const batchPredictSubject = async (req, res) => {
     if (req.user.role === 'faculty' || req.user.role === 'tutor') {
       const hasAccess = await FacultySubject.findOne({
         where: {
-          faculty_id: req.user.faculty.id,
+          faculty_id: req.user.facultyId || req.user.faculty?.id,
           subject_id: subject_id,
           academic_year: currentYear
         }
@@ -267,34 +275,57 @@ const batchPredictSubject = async (req, res) => {
       });
     }
 
-    // Call ML service for batch prediction
-    const response = await mlServiceClient.post('/predict/batch', {
-      subject_id,
-      academic_year: currentYear
-    });
+    let mlServiceResults = null;
+    let mlServiceError = null;
+
+    // Try ML service first
+    try {
+      const response = await mlServiceClient.post('/predict/batch', {
+        subject_id,
+        academic_year: currentYear
+      });
+      mlServiceResults = response.data;
+    } catch (mlError) {
+      logger.warn('ML service unavailable for batch prediction:', mlError.message);
+      mlServiceError = 'ML service unavailable';
+      
+      // Fallback: Check if predictions already exist, if not suggest using sample data
+      const existingPredictions = await MLPrediction.count({
+        where: { subject_id: subject_id }
+      });
+      
+      if (existingPredictions === 0) {
+        return res.status(503).json({
+          success: false,
+          error: 'ML service unavailable and no existing predictions found',
+          suggestion: 'Use the sample prediction script to generate test data',
+          ml_service_error: mlError.message
+        });
+      }
+      
+      // Return existing predictions as "generated"
+      mlServiceResults = {
+        message: 'Using existing predictions (ML service unavailable)',
+        predictions_count: existingPredictions,
+        service_status: 'offline'
+      };
+    }
 
     logger.info(`Batch prediction completed for subject ${subject_id} by user ${req.user.id}`);
 
     res.json({
       success: true,
-      message: 'Batch prediction completed',
-      results: response.data,
+      message: mlServiceError ? 'Using existing predictions (ML service unavailable)' : 'Batch prediction completed',
+      results: mlServiceResults,
       subject_name: subject.subject_name,
       generated_by: req.user.unique_id,
+      ml_service_error: mlServiceError,
       timestamp: new Date().toISOString()
     });
 
   } catch (error) {
     logger.error('Batch prediction failed:', error.message);
     
-    if (error.response) {
-      return res.status(error.response.status).json({
-        success: false,
-        error: 'ML service error',
-        details: error.response.data
-      });
-    }
-
     res.status(500).json({
       success: false,
       error: 'Batch prediction failed',
@@ -326,7 +357,7 @@ const togglePredictionVisibility = async (req, res) => {
     if (req.user.role === 'tutor') {
       const hasAccess = await FacultySubject.findOne({
         where: {
-          faculty_id: req.user.faculty.id,
+          faculty_id: req.user.facultyId || req.user.faculty?.id,
           subject_id: parseInt(subject_id),
           academic_year: currentYear
         }
@@ -340,18 +371,27 @@ const togglePredictionVisibility = async (req, res) => {
       }
     }
 
-    // Call ML service to toggle visibility
-    const response = await mlServiceClient.post(`/predictions/toggle/${subject_id}`, {
-      is_visible,
-      faculty_id: req.user.faculty?.id
-    });
-
-    // Also update local database
+    // Update local database first
     const updatedCount = await MLPrediction.togglePredictionVisibility(
       parseInt(subject_id),
       is_visible,
-      req.user.faculty?.id
+      req.user.facultyId || req.user.faculty?.id
     );
+
+    let mlServiceResponse = null;
+    let mlServiceError = null;
+
+    // Try to notify ML service, but don't fail if it's unavailable
+    try {
+      const response = await mlServiceClient.post(`/predictions/toggle/${subject_id}`, {
+        is_visible,
+        faculty_id: req.user.facultyId || req.user.faculty?.id
+      });
+      mlServiceResponse = response.data;
+    } catch (mlError) {
+      logger.warn('ML service unavailable for visibility toggle:', mlError.message);
+      mlServiceError = 'ML service unavailable - visibility updated in database only';
+    }
 
     logger.info(`Prediction visibility toggled for subject ${subject_id} to ${is_visible} by user ${req.user.id}`);
 
@@ -362,7 +402,8 @@ const togglePredictionVisibility = async (req, res) => {
         subject_id: parseInt(subject_id),
         is_visible,
         updated_predictions: updatedCount,
-        ml_service_response: response.data,
+        ml_service_response: mlServiceResponse,
+        ml_service_error: mlServiceError,
         updated_by: req.user.unique_id,
         timestamp: new Date().toISOString()
       }
@@ -371,14 +412,6 @@ const togglePredictionVisibility = async (req, res) => {
   } catch (error) {
     logger.error('Toggle prediction visibility failed:', error.message);
     
-    if (error.response) {
-      return res.status(error.response.status).json({
-        success: false,
-        error: 'ML service error',
-        details: error.response.data
-      });
-    }
-
     res.status(500).json({
       success: false,
       error: 'Toggle prediction visibility failed',
@@ -518,7 +551,7 @@ const getSubjectPredictions = async (req, res) => {
     if (req.user.role === 'faculty' || req.user.role === 'tutor') {
       const hasAccess = await FacultySubject.findOne({
         where: {
-          faculty_id: req.user.faculty.id,
+          faculty_id: req.user.facultyId || req.user.faculty?.id,
           subject_id: parseInt(subject_id),
           academic_year: currentYear
         }
@@ -603,35 +636,46 @@ const getAccuracyStats = async (req, res) => {
 
     const { subject_id, model_version } = req.query;
 
-    // Call ML service for accuracy stats
-    const response = await mlServiceClient.get('/accuracy', {
-      params: { subject_id, model_version }
-    });
-
-    // Also get stats from local database
+    // Get stats from local database
     const localStats = await MLPrediction.getModelAccuracyStats(
       model_version,
       subject_id ? parseInt(subject_id) : null
     );
 
+    let mlServiceStats = null;
+    let mlServiceError = null;
+
+    // Try to get stats from ML service, but don't fail if it's unavailable
+    try {
+      const response = await mlServiceClient.get('/accuracy', {
+        params: { subject_id, model_version }
+      });
+      mlServiceStats = response.data.data;
+    } catch (mlError) {
+      logger.warn('ML service unavailable for accuracy stats:', mlError.message);
+      mlServiceError = 'ML service unavailable';
+      
+      // Create fallback stats from database
+      mlServiceStats = {
+        average_accuracy: localStats.averageAccuracy || 0,
+        total_predictions: localStats.totalPredictions || 0,
+        accurate_predictions: localStats.accuratePredictions || 0,
+        model_version: model_version || 'v1.0.0-mock',
+        service_status: 'offline'
+      };
+    }
+
     res.json({
       success: true,
-      ml_service_stats: response.data.data,
+      ml_service_stats: mlServiceStats,
       database_stats: localStats,
+      ml_service_error: mlServiceError,
       timestamp: new Date().toISOString()
     });
 
   } catch (error) {
     logger.error('Get accuracy stats failed:', error.message);
     
-    if (error.response) {
-      return res.status(error.response.status).json({
-        success: false,
-        error: 'ML service error',
-        details: error.response.data
-      });
-    }
-
     res.status(500).json({
       success: false,
       error: 'Failed to get accuracy stats',

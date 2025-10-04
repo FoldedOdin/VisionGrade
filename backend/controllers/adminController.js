@@ -155,12 +155,15 @@ class AdminController {
 
       // Create role-specific record
       if (role === 'student') {
-        await Student.create({
+        const student = await Student.create({
           user_id: user.id,
           student_name: additionalData.name,
           semester: additionalData.semester || 1,
           batch_year: additionalData.batch_year || new Date().getFullYear()
         }, { transaction });
+
+        // Auto-enroll student in semester subjects
+        await StudentSubject.enrollStudentInSemesterSubjects(student.id, student.semester);
       } else if (role === 'faculty' || role === 'tutor') {
         await Faculty.create({
           user_id: user.id,
@@ -855,6 +858,246 @@ class AdminController {
           code: 'REMOVAL_ERROR',
           message: 'Failed to remove subject assignment',
           timestamp: new Date().toISOString()
+        }
+      });
+    }
+  }
+
+  async autoAssignFacultyToSubjects(req, res) {
+    try {
+      const { faculty_id, semester, subject_ids, academic_year } = req.body;
+      const currentYear = academic_year || new Date().getFullYear();
+
+      if (!faculty_id) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Faculty ID is required',
+            timestamp: new Date().toISOString()
+          }
+        });
+      }
+
+      if (!semester && !subject_ids) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Either semester or subject_ids must be provided',
+            timestamp: new Date().toISOString()
+          }
+        });
+      }
+
+      // Verify faculty exists
+      const faculty = await Faculty.findByPk(faculty_id, {
+        include: [{
+          model: User,
+          as: 'user',
+          attributes: ['unique_id', 'email']
+        }]
+      });
+
+      if (!faculty) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            code: 'FACULTY_NOT_FOUND',
+            message: 'Faculty member not found',
+            timestamp: new Date().toISOString()
+          }
+        });
+      }
+
+      // Get subjects to assign
+      let subjects;
+      if (subject_ids) {
+        subjects = await Subject.findAll({
+          where: { id: subject_ids }
+        });
+      } else {
+        subjects = await Subject.findAll({
+          where: { semester: semester },
+          order: [['subject_code', 'ASC']]
+        });
+      }
+
+      if (subjects.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            code: 'NO_SUBJECTS_FOUND',
+            message: 'No subjects found matching criteria',
+            timestamp: new Date().toISOString()
+          }
+        });
+      }
+
+      // Check existing assignments
+      const existingAssignments = await FacultySubject.findAll({
+        where: {
+          faculty_id: faculty_id,
+          subject_id: subjects.map(s => s.id),
+          academic_year: currentYear
+        }
+      });
+
+      // Create new assignments
+      let newAssignments = 0;
+      const assignmentResults = [];
+
+      for (const subject of subjects) {
+        const exists = existingAssignments.find(a => a.subject_id === subject.id);
+        if (!exists) {
+          await FacultySubject.create({
+            faculty_id: faculty_id,
+            subject_id: subject.id,
+            academic_year: currentYear
+          });
+          newAssignments++;
+          assignmentResults.push({
+            subject_id: subject.id,
+            subject_code: subject.subject_code,
+            subject_name: subject.subject_name,
+            status: 'assigned'
+          });
+        } else {
+          assignmentResults.push({
+            subject_id: subject.id,
+            subject_code: subject.subject_code,
+            subject_name: subject.subject_name,
+            status: 'already_assigned'
+          });
+        }
+      }
+
+      res.json({
+        success: true,
+        message: `Faculty assignment completed: ${newAssignments} new assignments`,
+        data: {
+          faculty: {
+            id: faculty.id,
+            name: faculty.faculty_name,
+            unique_id: faculty.user.unique_id
+          },
+          total_subjects: subjects.length,
+          new_assignments: newAssignments,
+          existing_assignments: existingAssignments.length,
+          academic_year: currentYear,
+          assignment_results: assignmentResults
+        },
+        timestamp: new Date().toISOString()
+      });
+
+    } catch (error) {
+      console.error('Auto assign faculty to subjects error:', error);
+      res.status(500).json({
+        success: false,
+        error: {
+          code: 'AUTO_ASSIGNMENT_ERROR',
+          message: 'Failed to auto-assign faculty to subjects',
+          timestamp: new Date().toISOString()
+        }
+      });
+    }
+  }
+
+  // Fix student enrollments
+  async fixStudentEnrollments(req, res) {
+    try {
+      const { studentIds, semester } = req.body;
+      const currentYear = new Date().getFullYear();
+      
+      let whereClause = { graduation_status: 'active' };
+      
+      if (studentIds && studentIds.length > 0) {
+        whereClause.id = { [Op.in]: studentIds };
+      }
+      
+      if (semester) {
+        whereClause.semester = semester;
+      }
+
+      const students = await Student.findAll({ where: whereClause });
+      
+      if (students.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            code: 'NO_STUDENTS_FOUND',
+            message: 'No students found matching criteria'
+          }
+        });
+      }
+
+      let fixedCount = 0;
+      const results = [];
+
+      for (const student of students) {
+        // Check if student is already enrolled in subjects for their semester
+        const existingEnrollments = await StudentSubject.count({
+          where: {
+            student_id: student.id,
+            academic_year: currentYear
+          },
+          include: [{
+            model: Subject,
+            as: 'subject',
+            where: {
+              semester: student.semester
+            }
+          }]
+        });
+
+        if (existingEnrollments === 0) {
+          try {
+            await StudentSubject.enrollStudentInSemesterSubjects(student.id, student.semester, currentYear);
+            fixedCount++;
+            results.push({
+              student_id: student.id,
+              student_name: student.student_name,
+              semester: student.semester,
+              status: 'enrolled'
+            });
+          } catch (error) {
+            results.push({
+              student_id: student.id,
+              student_name: student.student_name,
+              semester: student.semester,
+              status: 'failed',
+              error: error.message
+            });
+          }
+        } else {
+          results.push({
+            student_id: student.id,
+            student_name: student.student_name,
+            semester: student.semester,
+            status: 'already_enrolled',
+            existing_enrollments: existingEnrollments
+          });
+        }
+      }
+
+      res.json({
+        success: true,
+        message: `Processed ${students.length} students, enrolled ${fixedCount} students`,
+        data: {
+          total_processed: students.length,
+          newly_enrolled: fixedCount,
+          already_enrolled: students.length - fixedCount,
+          results: results
+        }
+      });
+
+    } catch (error) {
+      console.error('Error fixing student enrollments:', error);
+      res.status(500).json({
+        success: false,
+        error: {
+          code: 'ENROLLMENT_FIX_ERROR',
+          message: 'Failed to fix student enrollments'
         }
       });
     }

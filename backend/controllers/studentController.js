@@ -113,6 +113,7 @@ class StudentController {
                 where: { student_id: student.id },
                 include: [{
                     model: Subject,
+                    as: 'subject',
                     attributes: ['subject_code', 'subject_name', 'subject_type', 'credits']
                 }],
                 order: [['created_at', 'DESC']]
@@ -120,10 +121,15 @@ class StudentController {
 
             // Group marks by subject
             const marksBySubject = marks.reduce((acc, mark) => {
-                const subjectCode = mark.Subject.subject_code;
+                if (!mark.subject) {
+                    console.warn(`Mark ${mark.id} has no associated subject`);
+                    return acc;
+                }
+                
+                const subjectCode = mark.subject.subject_code;
                 if (!acc[subjectCode]) {
                     acc[subjectCode] = {
-                        subject: mark.Subject,
+                        subject: mark.subject,
                         marks: []
                     };
                 }
@@ -177,6 +183,7 @@ class StudentController {
                 where: { student_id: student.id },
                 include: [{
                     model: Subject,
+                    as: 'subject',
                     attributes: ['subject_code', 'subject_name', 'subject_type']
                 }],
                 order: [['updated_at', 'DESC']]
@@ -235,6 +242,7 @@ class StudentController {
                 },
                 include: [{
                     model: Subject,
+                    as: 'subject',
                     attributes: ['subject_code', 'subject_name', 'subject_type']
                 }],
                 order: [['created_at', 'DESC']]

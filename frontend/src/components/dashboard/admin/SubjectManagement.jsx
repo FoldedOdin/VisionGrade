@@ -304,7 +304,7 @@ const SubjectManagement = () => {
                     value={formData.subject_code}
                     onChange={(e) => setFormData(prev => ({ ...prev, subject_code: e.target.value.toUpperCase() }))}
                     placeholder="e.g., CS101"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent admin-form-input"
                   />
                 </div>
 
@@ -318,7 +318,7 @@ const SubjectManagement = () => {
                     value={formData.subject_name}
                     onChange={(e) => setFormData(prev => ({ ...prev, subject_name: e.target.value }))}
                     placeholder="e.g., Introduction to Computer Science"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent admin-form-input"
                   />
                 </div>
 
@@ -364,7 +364,7 @@ const SubjectManagement = () => {
                     max="6"
                     value={formData.credits}
                     onChange={(e) => setFormData(prev => ({ ...prev, credits: parseInt(e.target.value) }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent admin-form-input"
                   />
                 </div>
 
